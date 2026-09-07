@@ -1,0 +1,4 @@
+Flask>=3.0,<4
+Telethon>=1.36,<2
+gunicorn>=22,<24
+nest_asyncio>=1.6,<2
