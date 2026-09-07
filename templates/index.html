@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Rk_Raja Telegram Panel</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+
+    background: white;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.2);
+}
+
+.header {
+    padding: 30px;
+    text-align: center;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #111827,
+            #374151
+        );
+}
+
+.header h1 {
+    margin: 0 0 8px;
+
+    font-size: 32px;
+}
+
+.header p {
+    margin: 0;
+
+    opacity: .85;
+}
+
+.content {
+    padding: 25px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+.card {
+    padding: 22px;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    background: #f8fafc;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+h2 {
+    margin-top: 0;
+
+    color: #1f2937;
+}
+
+label {
+    display: block;
+
+    margin:
+        12px 0 6px;
+
+    font-weight: bold;
+}
+
+input,
+textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border:
+        1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 130px;
+
+    resize: vertical;
+}
+
+button {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 12px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    color: white;
+
+    font-weight: bold;
+
+    background: #2563eb;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.stop {
+    background: #dc2626;
+}
+
+.contacts {
+    max-height: 350px;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 8px;
+
+    padding: 8px;
+}
+
+.contact {
+    padding: 12px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+
+    cursor: pointer;
+}
+
+.contact:hover {
+    background: #f1f5f9;
+}
+
+.status {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+.stat {
+    padding: 18px;
+
+    border-radius: 10px;
+
+    background: #111827;
+
+    color: white;
+
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+
+    font-size: 24px;
+
+    margin-top: 8px;
+}
+
+.logs {
+
+    height: 300px;
+
+    overflow-y: auto;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    background: #111827;
+
+    color: white;
+
+    font-family: monospace;
+
+    font-size: 12px;
+}
+
+.log {
+    padding: 6px;
+
+    margin-bottom: 5px;
+
+    border-bottom:
+        1px solid #374151;
+}
+
+@media(max-width: 700px) {
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .status {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+
+<h1>👑 Raja Telegram Panel</h1>
+
+<p>
+Telegram Login • Contacts • Controlled Messaging
+</p>
+
+</header>
+
+
+<div class="content">
+
+
+<div class="card">
+
+<h2>🔐 Telegram Login</h2>
+
+<label>API ID</label>
+
+<input
+    id="api_id"
+    placeholder="Telegram API ID"
+>
+
+<label>API Hash</label>
+
+<input
+    id="api_hash"
+    placeholder="Telegram API Hash"
+>
+
+<label>Phone Number</label>
+
+<input
+    id="phone"
+    placeholder="+91..."
+>
+
+<button onclick="login()">
+📱 Send Login Code
+</button>
+
+<label>Verification Code</label>
+
+<input
+    id="code"
+    placeholder="Code"
+>
+
+<button onclick="verify()">
+✅ Verify Code
+</button>
+
+<label>2FA Password</label>
+
+<input
+    id="password"
+    type="password"
+    placeholder="If enabled"
+>
+
+<button onclick="verifyPassword()">
+🔑 Verify 2FA
+</button>
+
+<p id="loginStatus"></p>
+
+</div>
+
+
+<div class="card">
+
+<h2>📞 Contacts & Groups</h2>
+
+<button onclick="getContacts()">
+Load Contacts
+</button>
+
+<div
+    id="contacts"
+    class="contacts"
+>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>💬 Message</h2>
+
+<label>One Authorized Target</label>
+
+<input
+    id="target"
+    placeholder="@username or ID"
+>
+
+<label>Message</label>
+
+<textarea
+    id="message"
+    placeholder="Write message..."
+></textarea>
+
+<button onclick="sendOnce()">
+📨 Send Once
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>▶️ Controlled Worker</h2>
+
+<label>Target</label>
+
+<input
+    id="workerTarget"
+    placeholder="@username or ID"
+>
+
+<label>Messages — one per line</label>
+
+<textarea
+    id="messages"
+    placeholder="Message 1
+Message 2
+Message 3"
+></textarea>
+
+<button onclick="startWorker()">
+🚀 Start
+</button>
+
+<button
+    class="stop"
+    onclick="stopWorker()"
+>
+🛑 Stop
+</button>
+
+</div>
+
+
+<div class="card full">
+
+<h2>📊 Status</h2>
+
+<div class="status">
+
+<div class="stat">
+
+Status
+
+<strong id="status">
+Not Started
+</strong>
+
+</div>
+
+<div class="stat">
+
+Sent
+
+<strong id="sent">
+0
+</strong>
+
+</div>
+
+<div class="stat">
+
+Failed
+
+<strong id="failed">
+0
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card full">
+
+<h2>📝 Live Logs</h2>
+
+<div
+    id="logs"
+    class="logs"
+>
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+async function login() {
+
+    const response =
+        await fetch(
+            "/start_login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    api_id:
+                        document
+                        .getElementById(
+                            "api_id"
+                        ).value,
+
+                    api_hash:
+                        document
+                        .getElementById(
+                            "api_hash"
+                        ).value,
+
+                    phone_number:
+                        document
+                        .getElementById(
+                            "phone"
+                        ).value
+
+                })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    document
+        .getElementById(
+            "loginStatus"
+        )
+        .textContent =
+            data.message;
+}
+
+
+async function verify() {
+
+    const response =
+        await fetch(
+            "/verify_code",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    code:
+                        document
+                        .getElementById(
+                            "code"
+                        ).value
+
+                })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    document
+        .getElementById(
+            "loginStatus"
+        )
+        .textContent =
+            data.message;
+}
+
+
+async function verifyPassword() {
+
+    const response =
+        await fetch(
+            "/verify_password",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    password:
+                        document
+                        .getElementById(
+                            "password"
+                        ).value
+
+                })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    document
+        .getElementById(
+            "loginStatus"
+        )
+        .textContent =
+            data.message;
+}
+
+
+async function getContacts() {
+
+    const response =
+        await fetch(
+            "/get_contacts"
+        );
+
+    const data =
+        await response.json();
+
+    const box =
+        document.getElementById(
+            "contacts"
+        );
+
+    box.innerHTML = "";
+
+    if (!data.success) {
+
+        box.textContent =
+            data.message;
+
+        return;
+    }
+
+    data.contacts.forEach(
+        contact => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "contact";
+
+            div.innerHTML =
+                `<b>${escapeHtml(
+                    contact.name
+                )}</b><br>
+                <small>${escapeHtml(
+                    contact.identifier
+                )} • ${
+                    escapeHtml(
+                        contact.type
+                    )
+                }</small>`;
+
+            div.onclick = () => {
+
+                document
+                    .getElementById(
+                        "target"
+                    )
+                    .value =
+                        contact.identifier;
+
+                document
+                    .getElementById(
+                        "workerTarget"
+                    )
+                    .value =
+                        contact.identifier;
+            };
+
+            box.appendChild(div);
+        }
+    );
+}
+
+
+async function sendOnce() {
+
+    const form =
+        new FormData();
+
+    form.append(
+        "target",
+        document
+            .getElementById(
+                "target"
+            ).value
+    );
+
+    form.append(
+        "message",
+        document
+            .getElementById(
+                "message"
+            ).value
+    );
+
+    const response =
+        await fetch(
+            "/send_message",
+            {
+                method: "POST",
+                body: form
+            }
+        );
+
+    const data =
+        await response.json();
+
+    alert(data.message);
+}
+
+
+async function startWorker() {
+
+    const form =
+        new FormData();
+
+    form.append(
+        "target",
+        document
+            .getElementById(
+                "workerTarget"
+            ).value
+    );
+
+    form.append(
+        "messages",
+        document
+            .getElementById(
+                "messages"
+            ).value
+    );
+
+    const response =
+        await fetch(
+            "/start_sending",
+            {
+                method: "POST",
+                body: form
+            }
+        );
+
+    const data =
+        await response.json();
+
+    alert(data.message);
+}
+
+
+async function stopWorker() {
+
+    const response =
+        await fetch(
+            "/stop_sending",
+            {
+                method: "POST"
+            }
+        );
+
+    const data =
+        await response.json();
+
+    alert(data.message);
+}
+
+
+async function updateStatus() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/get_status"
+            );
+
+        const data =
+            await response.json();
+
+        document
+            .getElementById(
+                "status"
+            )
+            .textContent =
+                data.status;
+
+        document
+            .getElementById(
+                "sent"
+            )
+            .textContent =
+                data.sent;
+
+        document
+            .getElementById(
+                "failed"
+            )
+            .textContent =
+                data.failed;
+
+    } catch (e) {}
+
+}
+
+
+async function updateLogs() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/get_logs"
+            );
+
+        const data =
+            await response.json();
+
+        const box =
+            document.getElementById(
+                "logs"
+            );
+
+        box.innerHTML = "";
+
+        data.logs.forEach(
+            log => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className =
+                    "log";
+
+                div.textContent =
+                    `[${log.time}] ${log.message}`;
+
+                box.appendChild(div);
+            }
+        );
+
+        box.scrollTop =
+            box.scrollHeight;
+
+    } catch (e) {}
+
+}
+
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+}
+
+
+setInterval(
+    updateStatus,
+    2000
+);
+
+setInterval(
+    updateLogs,
+    2000
+);
+
+updateStatus();
+updateLogs();
+
+</script>
+
+</body>
+
+  </html>
